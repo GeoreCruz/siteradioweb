@@ -1,1123 +1,884 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onda Livre 98.7 FM</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0a0f;
-    --bg2: #111118;
-    --bg3: #18181f;
-    --accent: #ff4d00;
-    --accent2: #ff8c00;
-    --gold: #f5c842;
-    --text: #f0ece4;
-    --muted: #7a7870;
-    --border: rgba(255,255,255,0.07);
-    --card: #14141b;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lucas Moraes — Fotógrafo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0e0c0a;
+      --paper: #f5f0e8;
+      --cream: #ede8dc;
+      --warm: #c9a97a;
+      --rust: #9c4a2b;
+      --fog: #8a8278;
+      --white: #fdfaf5;
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-  /* ─── NAV ─── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 3rem;
-    height: 64px;
-    background: rgba(10,10,15,0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
+    /* ─── CURSOR ─────────────────────────────── */
+    .cursor {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--rust);
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease, width 0.25s ease, height 0.25s ease, background 0.25s ease;
+      mix-blend-mode: multiply;
+    }
+    .cursor.big { width: 40px; height: 40px; background: rgba(156,74,43,0.25); }
 
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    letter-spacing: 2px;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
+    /* ─── NOISE OVERLAY ───────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.5;
+    }
 
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--accent); }
+    /* ─── NAV ─────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 4rem;
+      mix-blend-mode: multiply;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fog);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--rust); }
 
-  .nav-live {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.75rem;
-    font-family: 'Space Mono', monospace;
-    color: var(--accent);
-    letter-spacing: 1px;
-  }
-  .live-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-  }
+    /* ─── HERO ────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-left {
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 8rem 4rem 6rem;
+      position: relative; z-index: 2;
+    }
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .hero-tag::before { content: ''; width: 30px; height: 1px; background: var(--rust); }
+    .hero-h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+    }
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--rust);
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--fog);
+      max-width: 380px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      background: var(--ink);
+      color: var(--white);
+      padding: 0.9rem 2.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+      width: fit-content;
+    }
+    .btn-primary:hover { background: var(--rust); }
+    .btn-primary svg { transition: transform 0.3s; }
+    .btn-primary:hover svg { transform: translateX(4px); }
 
-  /* ─── HERO ─── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 100px 2rem 3rem;
-    position: relative;
-    overflow: hidden;
-  }
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-photo-wrap {
+      width: 100%; height: 100%;
+      position: relative;
+    }
+    .hero-photo-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: sepia(15%) contrast(1.05);
+      transition: transform 8s ease;
+    }
+    #hero:hover .hero-photo-wrap img { transform: scale(1.03); }
 
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 70% 50% at 50% 60%, rgba(255,77,0,0.12) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 30% at 20% 80%, rgba(255,140,0,0.06) 0%, transparent 60%);
-  }
+    .hero-photo-caption {
+      position: absolute; bottom: 3rem; left: -3rem;
+      background: var(--white);
+      padding: 1.5rem 2rem;
+      width: 220px;
+      box-shadow: 0 20px 60px rgba(14,12,10,0.12);
+    }
+    .hero-photo-caption strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+    }
+    .hero-photo-caption span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--fog);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
 
-  .hero-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 3px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    opacity: 0.9;
-  }
+    .hero-scroll-hint {
+      position: absolute; bottom: 3rem; right: 4rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fog);
+      z-index: 3;
+    }
+    .scroll-line {
+      width: 1px; height: 60px; background: var(--fog);
+      animation: scrollDrop 2s ease-in-out infinite;
+    }
+    @keyframes scrollDrop {
+      0%,100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.3); opacity: 0.3; }
+    }
 
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(5rem, 14vw, 13rem);
-    line-height: 0.9;
-    letter-spacing: 4px;
-    margin-bottom: 0.5rem;
-  }
+    /* ─── SECTION COMMONS ─────────────────────── */
+    section { padding: 8rem 4rem; }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .section-label::before { content: ''; width: 24px; height: 1px; background: var(--rust); }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
 
-  .hero h1 .freq {
-    color: var(--accent);
-    display: block;
-    font-size: clamp(3rem, 8vw, 7rem);
-    letter-spacing: 8px;
-  }
+    /* ─── PORTFOLIO ───────────────────────────── */
+    #portfolio { background: var(--ink); color: var(--white); }
+    #portfolio .section-label { color: var(--warm); }
+    #portfolio .section-label::before { background: var(--warm); }
+    #portfolio .section-title { color: var(--white); }
 
-  .hero-sub {
-    color: var(--muted);
-    font-size: 1rem;
-    font-weight: 300;
-    max-width: 420px;
-    margin: 1.5rem auto 0;
-    font-style: italic;
-  }
+    .portfolio-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 4rem;
+    }
+    .portfolio-header p {
+      color: rgba(253,250,245,0.55);
+      max-width: 340px;
+      font-size: 1rem;
+    }
 
-  /* ─── WAVES SVG ─── */
-  .waves {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    height: 40px;
-    margin: 2rem 0;
-  }
-  .wave-bar {
-    width: 3px;
-    border-radius: 99px;
-    background: var(--accent);
-    animation: wave-anim 1s ease-in-out infinite;
-  }
-  @keyframes wave-anim {
-    0%, 100% { height: 8px; opacity: 0.3; }
-    50% { height: 36px; opacity: 1; }
-  }
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 1.2rem;
+    }
+    .photo-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .photo-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: sepia(10%) contrast(1.08) brightness(0.92);
+      transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.6s;
+    }
+    .photo-card:hover img { transform: scale(1.06); filter: sepia(0%) contrast(1.1) brightness(1); }
+    .photo-card-info {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(14,12,10,0.75) 0%, transparent 50%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.5rem;
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .photo-card:hover .photo-card-info { opacity: 1; }
+    .photo-card-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+    }
+    .photo-card-info span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--warm);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
 
-  /* ─── PLAYER ─── */
-  .player-section {
-    padding: 0 2rem 6rem;
-    display: flex;
-    justify-content: center;
-  }
+    /* grid layout */
+    .photo-card:nth-child(1) { grid-column: 1/6; grid-row: 1; height: 420px; }
+    .photo-card:nth-child(2) { grid-column: 6/9; grid-row: 1; height: 420px; }
+    .photo-card:nth-child(3) { grid-column: 9/13; grid-row: 1; height: 420px; }
+    .photo-card:nth-child(4) { grid-column: 1/4; grid-row: 2; height: 350px; }
+    .photo-card:nth-child(5) { grid-column: 4/9; grid-row: 2; height: 350px; }
+    .photo-card:nth-child(6) { grid-column: 9/13; grid-row: 2; height: 350px; }
 
-  .player-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 580px;
-    position: relative;
-    overflow: hidden;
-  }
-  .player-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
-  }
+    /* ─── SERVICES ────────────────────────────── */
+    #servicos { background: var(--cream); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 4rem;
+    }
+    .service-card {
+      background: var(--white);
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--rust);
+      transition: height 0.4s;
+    }
+    .service-card:hover { background: var(--paper); }
+    .service-card:hover::before { height: 100%; }
+    .service-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: var(--cream);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      transition: color 0.4s;
+    }
+    .service-card:hover .service-num { color: rgba(156,74,43,0.15); }
+    .service-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .service-card p { color: var(--fog); font-size: 0.95rem; line-height: 1.7; }
+    .service-price {
+      margin-top: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--rust);
+    }
 
-  .now-playing-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
+    /* ─── ABOUT ───────────────────────────────── */
+    #sobre {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      align-items: center;
+      padding: 8rem 4rem;
+    }
+    .about-img-wrap {
+      position: relative;
+    }
+    .about-img-main {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      filter: sepia(12%) contrast(1.05);
+      display: block;
+    }
+    .about-img-accent {
+      position: absolute;
+      bottom: -2.5rem; right: -2.5rem;
+      width: 55%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      filter: sepia(20%) contrast(1.08);
+      border: 6px solid var(--paper);
+    }
+    .about-years {
+      position: absolute; top: 2rem; left: -2rem;
+      background: var(--rust);
+      color: var(--white);
+      padding: 1.2rem 1.5rem;
+      text-align: center;
+    }
+    .about-years strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .about-years span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .about-text .section-title { margin-bottom: 1.5rem; }
+    .about-text p { color: var(--fog); line-height: 1.8; margin-bottom: 1.2rem; }
+    .about-stats {
+      display: flex; gap: 3rem;
+      margin: 2.5rem 0;
+      padding-top: 2rem;
+      border-top: 1px solid var(--cream);
+    }
+    .stat strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .stat span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fog);
+    }
 
-  .track-info {
-    margin-bottom: 1.8rem;
-  }
-  .track-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 0.2rem;
-  }
-  .track-artist {
-    color: var(--muted);
-    font-size: 0.9rem;
-    font-weight: 300;
-  }
+    /* ─── TESTEMUNHOS ─────────────────────────── */
+    #depoimentos { background: var(--ink); color: var(--white); text-align: center; }
+    #depoimentos .section-label { color: var(--warm); justify-content: center; }
+    #depoimentos .section-label::before { background: var(--warm); }
+    #depoimentos .section-title { color: var(--white); text-align: center; }
 
-  .progress-bar {
-    width: 100%;
-    height: 3px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 99px;
-    margin-bottom: 1.5rem;
-    position: relative;
-    cursor: pointer;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px;
-    width: 38%;
-    position: relative;
-    transition: width 0.3s;
-  }
-  .progress-fill::after {
-    content: '';
-    position: absolute;
-    right: -5px; top: -4px;
-    width: 11px; height: 11px;
-    border-radius: 50%;
-    background: var(--accent2);
-  }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 4rem;
+    }
+    .testimonial {
+      background: rgba(253,250,245,0.04);
+      padding: 3rem 2.5rem;
+      text-align: left;
+      position: relative;
+    }
+    .testimonial::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      color: var(--warm);
+      opacity: 0.4;
+      line-height: 1;
+      display: block;
+      margin-bottom: -1.5rem;
+    }
+    .testimonial p {
+      font-style: italic;
+      color: rgba(253,250,245,0.7);
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+    .testimonial-author {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .testimonial-avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: sepia(15%);
+    }
+    .testimonial-author div strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--white);
+    }
+    .testimonial-author div span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--warm);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
 
-  .time-row {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-  }
+    /* ─── CONTATO ─────────────────────────────── */
+    #contato {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      padding: 8rem 4rem;
+      background: var(--white);
+    }
+    .contact-info .section-title { margin-bottom: 1rem; }
+    .contact-info p { color: var(--fog); margin-bottom: 2rem; }
+    .contact-details { list-style: none; }
+    .contact-details li {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid var(--cream);
+      font-size: 0.95rem;
+    }
+    .contact-details li:last-child { border-bottom: none; }
+    .contact-icon {
+      width: 36px; height: 36px;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-details strong { display: block; font-size: 0.8rem; color: var(--fog); font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.2rem; }
 
-  .controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
+    .contact-form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fog);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--paper);
+      border: 1.5px solid transparent;
+      padding: 0.9rem 1.2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.3s;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--rust); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 
-  .ctrl-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 1.4rem;
-    transition: color 0.2s, transform 0.1s;
-    display: flex;
-    align-items: center;
-  }
-  .ctrl-btn:hover { color: var(--text); }
-  .ctrl-btn:active { transform: scale(0.92); }
+    /* ─── FOOTER ──────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: rgba(253,250,245,0.4);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.06em;
+    }
+    footer span { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; }
+    .social-links { display: flex; gap: 1.5rem; }
+    .social-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(253,250,245,0.4);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .social-links a:hover { color: var(--warm); }
 
-  .play-btn {
-    width: 58px; height: 58px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: none;
-    color: #fff;
-    font-size: 1.6rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s, transform 0.1s;
-  }
-  .play-btn:hover { background: var(--accent2); }
-  .play-btn:active { transform: scale(0.95); }
-  .play-btn.playing .play-icon { display: none; }
-  .play-btn.playing .pause-icon { display: block; }
-  .play-btn .pause-icon { display: none; }
+    /* ─── FADE IN ANIMATION ───────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  .volume-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--muted);
-    font-size: 1rem;
-  }
-
-  input[type="range"].vol-slider {
-    flex: 1;
-    height: 3px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: rgba(255,255,255,0.12);
-    border-radius: 99px;
-    outline: none;
-    cursor: pointer;
-  }
-  input[type="range"].vol-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-  }
-
-  /* ─── SECTION LAYOUT ─── */
-  section { padding: 6rem 2rem; }
-
-  .container { max-width: 1140px; margin: 0 auto; }
-
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 0.8rem;
-    display: block;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 3rem;
-  }
-
-  .section-title em {
-    color: var(--accent);
-    font-style: normal;
-  }
-
-  /* ─── OUVINTES DA SEMANA ─── */
-  #ouvintes { background: var(--bg2); }
-
-  .ouvintes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.2rem;
-  }
-
-  .ouvinte-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .ouvinte-card:hover {
-    border-color: rgba(255,77,0,0.3);
-    transform: translateY(-3px);
-  }
-
-  .ouvinte-card.destaque {
-    border-color: var(--gold);
-    background: linear-gradient(135deg, #14141b 0%, #1c1a10 100%);
-  }
-  .ouvinte-card.destaque::before {
-    content: '⭐ OUVINTE DA SEMANA';
-    position: absolute;
-    top: -12px;
-    background: var(--gold);
-    color: #1a1500;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 1px;
-    padding: 3px 10px;
-    border-radius: 99px;
-    font-weight: 700;
-  }
-
-  .ouvinte-avatar {
-    width: 68px; height: 68px;
-    border-radius: 50%;
-    margin-bottom: 0.8rem;
-    font-size: 1.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg3);
-    overflow: hidden;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .ouvinte-avatar.gold-ring {
-    box-shadow: 0 0 0 2px var(--gold), 0 0 12px rgba(245,200,66,0.2);
-  }
-
-  .ouvinte-name {
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 0.2rem;
-  }
-  .ouvinte-city {
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-bottom: 0.6rem;
-  }
-  .ouvinte-msg {
-    font-size: 0.8rem;
-    color: rgba(240,236,228,0.6);
-    font-style: italic;
-    line-height: 1.4;
-  }
-
-  /* ─── PROGRAMAÇÃO ─── */
-  #programacao { background: var(--bg); }
-
-  .prog-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .prog-item {
-    display: grid;
-    grid-template-columns: 110px 1fr auto;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.2rem 0;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-    border-radius: 8px;
-    padding: 1rem 1rem;
-  }
-  .prog-item:hover { background: rgba(255,255,255,0.02); }
-
-  .prog-item.ao-vivo {
-    background: rgba(255,77,0,0.05);
-    border: 1px solid rgba(255,77,0,0.2);
-    border-radius: 10px;
-    margin-bottom: 4px;
-  }
-
-  .prog-time {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-
-  .prog-time .live-tag {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-size: 0.6rem;
-    letter-spacing: 1px;
-    padding: 2px 7px;
-    border-radius: 99px;
-    margin-top: 4px;
-  }
-
-  .prog-info .prog-name {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 2px;
-  }
-  .prog-info .prog-desc {
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-
-  .prog-host {
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-align: right;
-    white-space: nowrap;
-  }
-
-  .days-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .day-tab {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 0.4rem 1rem;
-    border-radius: 99px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-  }
-  .day-tab.active, .day-tab:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-
-  /* ─── EQUIPE ─── */
-  #equipe { background: var(--bg2); }
-
-  .equipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .membro-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: transform 0.25s, border-color 0.25s;
-  }
-  .membro-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255,77,0,0.25);
-  }
-
-  .membro-photo {
-    width: 100%;
-    aspect-ratio: 1;
-    background: var(--bg3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .membro-photo::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 40%;
-    background: linear-gradient(to top, var(--card), transparent);
-  }
-
-  .membro-info {
-    padding: 1.2rem;
-  }
-  .membro-nome {
-    font-weight: 700;
-    font-size: 1.05rem;
-    margin-bottom: 2px;
-  }
-  .membro-cargo {
-    font-size: 0.8rem;
-    color: var(--accent);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 1px;
-    margin-bottom: 0.6rem;
-  }
-  .membro-bio {
-    font-size: 0.82rem;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
-  /* ─── APOIADORES ─── */
-  #apoiadores { background: var(--bg); }
-
-  .apoiadores-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1rem;
-    margin-bottom: 3rem;
-  }
-
-  .apoiador-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    transition: border-color 0.2s, transform 0.2s;
-    cursor: pointer;
-  }
-  .apoiador-card:hover {
-    border-color: rgba(255,77,0,0.3);
-    transform: translateY(-2px);
-  }
-
-  .apoiador-logo {
-    font-size: 2.2rem;
-    margin-bottom: 0.6rem;
-    display: block;
-  }
-  .apoiador-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 0.2rem;
-  }
-  .apoiador-seg {
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-
-  .apoio-cta {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2.5rem;
-    text-align: center;
-    max-width: 560px;
-    margin: 0 auto;
-  }
-  .apoio-cta h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    margin-bottom: 0.8rem;
-  }
-  .apoio-cta p {
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-  }
-  .btn-primary {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    padding: 0.7rem 2rem;
-    border-radius: 99px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    letter-spacing: 0.5px;
-  }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-primary:active { transform: scale(0.97); }
-
-  /* ─── FOOTER ─── */
-  footer {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    padding: 4rem 2rem 2rem;
-    text-align: center;
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3rem;
-    letter-spacing: 4px;
-    margin-bottom: 0.5rem;
-  }
-  .footer-logo span { color: var(--accent); }
-  .footer-tagline {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-bottom: 2rem;
-    font-style: italic;
-  }
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 3rem;
-  }
-  .footer-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.82rem;
-    transition: color 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: 'Space Mono', monospace;
-  }
-  .footer-links a:hover { color: var(--accent); }
-  .footer-copy {
-    color: rgba(122,120,112,0.5);
-    font-size: 0.75rem;
-  }
-
-  /* ─── SCROLL REVEAL ─── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: none;
-  }
-
-  @media (max-width: 720px) {
-    nav { padding: 0 1.2rem; }
-    .nav-links { display: none; }
-    .prog-item { grid-template-columns: 90px 1fr; }
-    .prog-host { display: none; }
-  }
-</style>
+    /* ─── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      #hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 7rem 2rem 3rem; }
+      .hero-right { height: 60vw; }
+      .hero-photo-caption { left: 1rem; bottom: 1.5rem; }
+      section { padding: 5rem 2rem; }
+      .portfolio-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+      .photo-card { grid-column: auto !important; grid-row: auto !important; height: 220px !important; }
+      .services-grid { grid-template-columns: 1fr; }
+      #sobre { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 2rem; }
+      .about-img-accent { display: none; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      #contato { grid-template-columns: 1fr; gap: 4rem; padding: 5rem 2rem; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2.5rem 2rem; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">ONDA<span>LIVRE</span></a>
-  <ul class="nav-links">
-    <li><a href="#ouvintes">Ouvintes</a></li>
-    <li><a href="#programacao">Programação</a></li>
-    <li><a href="#equipe">Equipe</a></li>
-    <li><a href="#apoiadores">Apoiadores</a></li>
-  </ul>
-  <div class="nav-live">
-    <div class="live-dot"></div>
-    AO VIVO · 98.7 FM
-  </div>
-</nav>
+  <div class="cursor" id="cursor"></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <p class="hero-tag" style="position:relative">Sua rádio desde 1994</p>
-  <h1 style="position:relative">
-    ONDA LIVRE
-    <span class="freq">98.7 FM</span>
-  </h1>
-  <p class="hero-sub" style="position:relative">A frequência que conecta histórias, músicas e pessoas em cada canto da cidade.</p>
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Lucas Moraes</a>
+    <ul class="nav-links">
+      <li><a href="#portfolio">Portfólio</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#depoimentos">Clientes</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+  </nav>
 
-  <div class="waves">
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const w = document.querySelector('.waves');
-        if (!w) return;
-        for (let i = 0; i < 32; i++) {
-          const b = document.createElement('div');
-          b.className = 'wave-bar';
-          b.style.animationDelay = (i * 0.07) + 's';
-          b.style.animationDuration = (0.7 + Math.random() * 0.8) + 's';
-          w.appendChild(b);
-        }
-      });
-    </script>
-  </div>
-</section>
-
-<!-- PLAYER -->
-<div class="player-section">
-  <div class="player-card reveal" id="player-card">
-    <div class="now-playing-label">📻 Transmissão ao vivo</div>
-    <div class="track-info">
-      <div class="track-title" id="track-title">Rádio Itinga FM</div>
-      <div class="track-artist" id="track-artist">Clique em play para ouvir ao vivo</div>
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Fotógrafo Profissional · São Paulo</p>
+      <h1 class="hero-h1">Momentos<br />que <em>nunca</em><br />se apagam.</h1>
+      <p class="hero-sub">Capturo histórias com luz, sensibilidade e um olhar único. De casamentos a retratos — cada imagem é um fragmento de eternidade.</p>
+      <a href="#portfolio" class="btn-primary">
+        Ver portfólio
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
     </div>
-    <div class="controls" style="justify-content:center;gap:1rem;margin-bottom:1.5rem">
-      <button class="play-btn" id="play-btn" onclick="togglePlay()" title="Play/Stop">
-        <span class="play-icon">▶</span>
-        <span class="pause-icon">⏹</span>
+    <div class="hero-right">
+      <div class="hero-photo-wrap">
+        <!-- Foto ilustrativa do fotógrafo -->
+        <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=900&q=85&auto=format" alt="Lucas Moraes Fotógrafo" />
+      </div>
+      <div class="hero-photo-caption">
+        <strong>Lucas<br/>Moraes</strong>
+        <span>Fotógrafo & Diretor de Arte</span>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="portfolio-header reveal">
+      <div>
+        <p class="section-label">Trabalhos selecionados</p>
+        <h2 class="section-title" style="color:var(--white)">Portfólio</h2>
+      </div>
+      <p>Uma curadoria dos meus projetos mais recentes e significativos.</p>
+    </div>
+
+    <div class="portfolio-grid">
+      <div class="photo-card reveal">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80&auto=format" alt="Casamento" />
+        <div class="photo-card-info"><h3>Casamento — Ana & Pedro</h3><span>Ensaio de casal</span></div>
+      </div>
+      <div class="photo-card reveal">
+        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=80&auto=format" alt="Retrato" />
+        <div class="photo-card-info"><h3>Retrato Editorial</h3><span>Fotografia de moda</span></div>
+      </div>
+      <div class="photo-card reveal">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80&auto=format" alt="Paisagem" />
+        <div class="photo-card-info"><h3>Sierras Negras</h3><span>Fotografia de natureza</span></div>
+      </div>
+      <div class="photo-card reveal">
+        <img src="https://images.unsplash.com/photo-1590650153855-d9e808231d41?w=800&q=80&auto=format" alt="Corporativo" />
+        <div class="photo-card-info"><h3>Branding Corporativo</h3><span>Fotografia empresarial</span></div>
+      </div>
+      <div class="photo-card reveal">
+        <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&q=80&auto=format" alt="Família" />
+        <div class="photo-card-info"><h3>Família Santos</h3><span>Ensaio familiar</span></div>
+      </div>
+      <div class="photo-card reveal">
+        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80&auto=format" alt="Viagem" />
+        <div class="photo-card-info"><h3>Itália · 2024</h3><span>Fotografia de viagem</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="servicos">
+    <div class="reveal">
+      <p class="section-label">O que ofereço</p>
+      <h2 class="section-title">Serviços</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <h3>Casamentos & Celebrações</h3>
+        <p>Cobertura completa do seu grande dia, desde os preparativos até a festa. Capturo cada detalhe com elegância e emoção genuína.</p>
+        <p class="service-price">A partir de R$ 4.800</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">02</div>
+        <h3>Retratos & Ensaios</h3>
+        <p>Sessões individuais, de casal ou família. Estúdio ou locação externa. Cada retrato revela a essência única de quem você é.</p>
+        <p class="service-price">A partir de R$ 890</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">03</div>
+        <h3>Fotografia Corporativa</h3>
+        <p>Headshots, eventos empresariais e branding visual. Imagens que fortalecem a identidade da sua empresa no mercado.</p>
+        <p class="service-price">A partir de R$ 1.400</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">04</div>
+        <h3>Moda & Editorial</h3>
+        <p>Colaboração criativa com marcas, agências e criadores de conteúdo. Direção de arte e produção completa disponíveis.</p>
+        <p class="service-price">Orçamento personalizado</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">05</div>
+        <h3>Gastronomia & Produto</h3>
+        <p>Fotografia especializada para restaurantes, e-commerces e marcas que precisam de imagens apetitosas e impactantes.</p>
+        <p class="service-price">A partir de R$ 1.200</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">06</div>
+        <h3>Viagem & Lifestyle</h3>
+        <p>Ensaios em destinos nacionais e internacionais. Acompanho sua jornada e transformo experiências em arte visual duradoura.</p>
+        <p class="service-price">Orçamento personalizado</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="sobre">
+    <div class="about-img-wrap reveal">
+      <img class="about-img-main" src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=700&q=85&auto=format" alt="Lucas Moraes com câmera" />
+      <img class="about-img-accent" src="https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?w=400&q=80&auto=format" alt="Equipamento fotográfico" />
+      <div class="about-years">
+        <strong>12+</strong>
+        <span>anos de<br/>experiência</span>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <p class="section-label">Sobre mim</p>
+      <h2 class="section-title">A câmera como extensão da alma.</h2>
+      <p>Sou Lucas Moraes, fotógrafo paulistano com mais de doze anos dedicados à arte de capturar instantes. Formado pela FAAP e com especializações em Barcelona e Nova York, trago um olhar que transita entre o clássico e o contemporâneo.</p>
+      <p>Cada projeto é uma colaboração — ouço, entendo, e só então levanto a câmera. Acredito que a melhor fotografia acontece quando o sujeito esquece que está sendo fotografado.</p>
+      <p>Meu trabalho já foi publicado nas revistas Vogue Brasil, Caras e Elle, e já fotografei casamentos em mais de 18 países.</p>
+      <div class="about-stats">
+        <div class="stat">
+          <strong>800+</strong>
+          <span>Casamentos<br/>realizados</span>
+        </div>
+        <div class="stat">
+          <strong>18</strong>
+          <span>Países<br/>visitados</span>
+        </div>
+        <div class="stat">
+          <strong>5×</strong>
+          <span>Premiado<br/>nacionalmente</span>
+        </div>
+      </div>
+      <a href="#contato" class="btn-primary">
+        Falar comigo
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section id="depoimentos">
+    <div class="reveal">
+      <p class="section-label">O que dizem</p>
+      <h2 class="section-title">Depoimentos</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial reveal">
+        <p>Lucas capturou cada detalhe do nosso casamento com uma sensibilidade incrível. As fotos superaram todos os nossos sonhos. São imagens que vamos guardar para sempre.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80&auto=format" alt="Mariana" />
+          <div>
+            <strong>Mariana Oliveira</strong>
+            <span>Casamento · 2024</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <p>Profissional impecável. As fotos corporativas elevaram completamente o nível da nossa comunicação. Cliente nossas já perguntam quem é o fotógrafo antes mesmo de nos contratar.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80&auto=format" alt="Rafael" />
+          <div>
+            <strong>Rafael Mendes</strong>
+            <span>CEO · Agência Forma</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <p>Nunca me senti tão confortável na frente de uma câmera. O Lucas tem um talento raro de deixar as pessoas à vontade. O resultado foi surpreendente — parece que não sou eu!</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=100&q=80&auto=format" alt="Camila" />
+          <div>
+            <strong>Camila Ferreira</strong>
+            <span>Ensaio individual · 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato">
+    <div class="contact-info reveal">
+      <p class="section-label">Vamos conversar</p>
+      <h2 class="section-title">Entre em contato.</h2>
+      <p>Seja para um orçamento, uma dúvida ou simplesmente trocar uma ideia sobre seu próximo projeto.</p>
+      <ul class="contact-details">
+        <li>
+          <div class="contact-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--fog)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div><strong>E-mail</strong>lucas@lucasmoraes.foto</div>
+        </li>
+        <li>
+          <div class="contact-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--fog)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <div><strong>WhatsApp</strong>(11) 99876-5432</div>
+        </li>
+        <li>
+          <div class="contact-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--fog)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div><strong>Localização</strong>Vila Madalena, São Paulo — SP</div>
+        </li>
+        <li>
+          <div class="contact-icon">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--fog)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div><strong>Horário</strong>Seg–Sex, 9h às 18h</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact-form reveal">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" placeholder="Seu nome completo" />
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" placeholder="seu@email.com" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tipo de serviço</label>
+        <select>
+          <option value="">Selecione um serviço</option>
+          <option>Casamento & Celebrações</option>
+          <option>Retratos & Ensaios</option>
+          <option>Fotografia Corporativa</option>
+          <option>Moda & Editorial</option>
+          <option>Gastronomia & Produto</option>
+          <option>Viagem & Lifestyle</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Data desejada</label>
+        <input type="date" />
+      </div>
+      <div class="form-group">
+        <label>Mensagem</label>
+        <textarea rows="5" placeholder="Conte-me um pouco sobre seu projeto..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="alert('Mensagem enviada! Em breve entro em contato.')" style="border:none;cursor:pointer;width:100%;justify-content:center;">
+        Enviar mensagem
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
     </div>
-    <div class="volume-row">
-      🔉
-      <input type="range" class="vol-slider" min="0" max="100" value="75" id="vol-slider" oninput="setVolume(this.value)">
-      🔊
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">Lucas Moraes</span>
+    <span>© 2025 · Todos os direitos reservados</span>
+    <div class="social-links">
+      <a href="#">Instagram</a>
+      <a href="#">Behance</a>
+      <a href="#">LinkedIn</a>
     </div>
-  </div>
-</div>
+  </footer>
 
-<!-- OUVINTES DA SEMANA -->
-<section id="ouvintes">
-  <div class="container">
-    <span class="section-label">Comunidade</span>
-    <h2 class="section-title">Ouvintes da <em>Semana</em></h2>
-    <div class="ouvintes-grid">
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, .photo-card, .service-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+    });
 
-      <div class="ouvinte-card destaque reveal">
-        <div class="ouvinte-avatar gold-ring" style="background:#2a2000;color:#f5c842;font-size:2rem">🎙️</div>
-        <div class="ouvinte-name">Cláudia Mendonça</div>
-        <div class="ouvinte-city">📍 Mauá, SP</div>
-        <div class="ouvinte-msg">"A Onda Livre me acompanha desde as 6h da manhã. Já não consigo imaginar o dia sem!"</div>
-      </div>
-
-      <div class="ouvinte-card reveal">
-        <div class="ouvinte-avatar" style="background:#1a1030;font-size:1.5rem;color:#b088ff">JR</div>
-        <div class="ouvinte-name">João Ribeiro</div>
-        <div class="ouvinte-city">📍 Santo André, SP</div>
-        <div class="ouvinte-msg">"As mensagens do programa da manhã são incríveis. Me levantam todo dia!"</div>
-      </div>
-
-      <div class="ouvinte-card reveal">
-        <div class="ouvinte-avatar" style="font-size:1.5rem">AP</div>
-        <div class="ouvinte-name">Ana Paula Souza</div>
-        <div class="ouvinte-city">📍 São Bernardo, SP</div>
-        <div class="ouvinte-msg">"Adoro o programa das 14h. O DJ Bebeto é demais!"</div>
-      </div>
-
-      <div class="ouvinte-card reveal">
-        <div class="ouvinte-avatar" style="background:#001a10;color:#00c875;font-size:1.5rem">MF</div>
-        <div class="ouvinte-name">Marcos Ferreira</div>
-        <div class="ouvinte-city">📍 Diadema, SP</div>
-        <div class="ouvinte-msg">"Ouço no caminho do trabalho. Minha companhia fiel há 10 anos."</div>
-      </div>
-
-      <div class="ouvinte-card reveal">
-        <div class="ouvinte-avatar" style="background:#1a0015;color:#ff88cc;font-size:1.5rem">LO</div>
-        <div class="ouvinte-name">Letícia Oliveira</div>
-        <div class="ouvinte-city">📍 São Caetano, SP</div>
-        <div class="ouvinte-msg">"O Fala Povo me deu voz quando eu mais precisava. Gratidão!"</div>
-      </div>
-
-      <div class="ouvinte-card reveal">
-        <div class="ouvinte-avatar" style="background:#1a1000;color:#ffaa00;font-size:1.5rem">RC</div>
-        <div class="ouvinte-name">Roberto Costa</div>
-        <div class="ouvinte-city">📍 São Paulo, SP</div>
-        <div class="ouvinte-msg">"98.7 FM, a melhor pedida pra um sábado com a família!"</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- PROGRAMAÇÃO -->
-<section id="programacao">
-  <div class="container">
-    <span class="section-label">Grade</span>
-    <h2 class="section-title">Nossa <em>Programação</em></h2>
-
-    <div class="days-tabs">
-      <button class="day-tab active" onclick="selectDay(this,'seg')">SEG</button>
-      <button class="day-tab" onclick="selectDay(this,'ter')">TER</button>
-      <button class="day-tab" onclick="selectDay(this,'qua')">QUA</button>
-      <button class="day-tab" onclick="selectDay(this,'qui')">QUI</button>
-      <button class="day-tab" onclick="selectDay(this,'sex')">SEX</button>
-      <button class="day-tab" onclick="selectDay(this,'sab')">SÁB</button>
-      <button class="day-tab" onclick="selectDay(this,'dom')">DOM</button>
-    </div>
-
-    <div class="prog-grid" id="prog-grid">
-      <!-- Injetado via JS -->
-    </div>
-  </div>
-</section>
-
-<!-- EQUIPE -->
-<section id="equipe">
-  <div class="container">
-    <span class="section-label">Quem faz acontecer</span>
-    <h2 class="section-title">Nossa <em>Equipe</em></h2>
-    <div class="equipe-grid">
-
-      <div class="membro-card reveal">
-        <div class="membro-photo" style="background:linear-gradient(135deg,#1a0800,#3d1500)">🎙️</div>
-        <div class="membro-info">
-          <div class="membro-nome">Bebeto Alves</div>
-          <div class="membro-cargo">Locutor · Tarde Musical</div>
-          <div class="membro-bio">25 anos de rádio, voz inconfundível nas tardes. Especialista em MPB, samba e muito bom humor.</div>
-        </div>
-      </div>
-
-      <div class="membro-card reveal">
-        <div class="membro-photo" style="background:linear-gradient(135deg,#000d1a,#001f40)">🎵</div>
-        <div class="membro-info">
-          <div class="membro-nome">DJ Renata Lima</div>
-          <div class="membro-cargo">DJ · Noite Eletrônica</div>
-          <div class="membro-bio">Formada em Comunicação, comanda as noites com os melhores mixes nacionais e internacionais.</div>
-        </div>
-      </div>
-
-      <div class="membro-card reveal">
-        <div class="membro-photo" style="background:linear-gradient(135deg,#0a0015,#200035)">📻</div>
-        <div class="membro-info">
-          <div class="membro-nome">Sandra Moura</div>
-          <div class="membro-cargo">Diretora de Conteúdo</div>
-          <div class="membro-bio">Jornalista premiada, garante que cada programa tenha alma, propósito e conexão com o ouvinte.</div>
-        </div>
-      </div>
-
-      <div class="membro-card reveal">
-        <div class="membro-photo" style="background:linear-gradient(135deg,#001a0a,#003015)">🌅</div>
-        <div class="membro-info">
-          <div class="membro-nome">Carlos Eduardo</div>
-          <div class="membro-cargo">Locutor · Manhã</div>
-          <div class="membro-bio">O cara que faz você sorrir antes do café. Com notícias, boa música e doses diárias de otimismo.</div>
-        </div>
-      </div>
-
-      <div class="membro-card reveal">
-        <div class="membro-photo" style="background:linear-gradient(135deg,#1a0f00,#3d2800)">🎤</div>
-        <div class="membro-info">
-          <div class="membro-nome">Patrícia Rocha</div>
-          <div class="membro-cargo">Repórter · Fala Povo</div>
-          <div class="membro-bio">Na rua ou no estúdio, sempre na escuta. Especialista em trazer histórias que tocam o coração.</div>
-        </div>
-      </div>
-
-      <div class="membro-card reveal">
-        <div class="membro-photo" style="background:linear-gradient(135deg,#001515,#003535)">⚙️</div>
-        <div class="membro-info">
-          <div class="membro-nome">Toninho Santos</div>
-          <div class="membro-cargo">Técnico de Áudio</div>
-          <div class="membro-bio">O mago dos bastidores. 30 anos garantindo que o som da Onda Livre chegue perfeito ao seu ouvido.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- APOIADORES -->
-<section id="apoiadores">
-  <div class="container">
-    <span class="section-label">Parceiros</span>
-    <h2 class="section-title">Nossos <em>Apoiadores</em></h2>
-
-    <div class="apoiadores-grid">
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">🏥</span>
-        <div class="apoiador-name">Clínica Saúde Total</div>
-        <div class="apoiador-seg">Saúde & Bem-estar</div>
-      </div>
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">🚗</span>
-        <div class="apoiador-name">Auto Peças Veloz</div>
-        <div class="apoiador-seg">Automotivo</div>
-      </div>
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">🍕</span>
-        <div class="apoiador-name">Pizzaria Dom Beto</div>
-        <div class="apoiador-seg">Alimentação</div>
-      </div>
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">🏗️</span>
-        <div class="apoiador-name">Construtora Almeida</div>
-        <div class="apoiador-seg">Construção Civil</div>
-      </div>
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">💊</span>
-        <div class="apoiador-name">Farmácia Popular</div>
-        <div class="apoiador-seg">Saúde</div>
-      </div>
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">📱</span>
-        <div class="apoiador-name">Tech Cell Store</div>
-        <div class="apoiador-seg">Tecnologia</div>
-      </div>
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">🎓</span>
-        <div class="apoiador-name">Colégio Horizonte</div>
-        <div class="apoiador-seg">Educação</div>
-      </div>
-      <div class="apoiador-card reveal">
-        <span class="apoiador-logo">🛒</span>
-        <div class="apoiador-name">Supermercado Bonfim</div>
-        <div class="apoiador-seg">Varejo</div>
-      </div>
-    </div>
-
-    <div class="apoio-cta reveal">
-      <h3>Seja um apoiador</h3>
-      <p>Leve sua marca para milhares de ouvintes todos os dias. Entre em contato e descubra nossos planos de patrocínio.</p>
-      <button class="btn-primary" onclick="openContact()">Falar com nossa equipe</button>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">ONDA<span>LIVRE</span></div>
-  <div class="footer-tagline">98.7 FM · A frequência da sua vida</div>
-  <div class="footer-links">
-    <a href="#ouvintes">Ouvintes</a>
-    <a href="#programacao">Programação</a>
-    <a href="#equipe">Equipe</a>
-    <a href="#apoiadores">Apoiadores</a>
-    <a href="mailto:contato@ondalivre.fm">Contato</a>
-  </div>
-  <div class="footer-copy">© 2025 Rádio Onda Livre 98.7 FM · Todos os direitos reservados</div>
-</footer>
-
-<script>
-// ── PLAYER REAL — Rádio Itinga FM ──
-const STREAM_URL = 'https://proxy.drive-alexgomes.workers.dev/?q=http://stm7.oficinadoradio.com.br:12078/;plugin_id=7628&site_id=18229588';
-
-let audio = null;
-let isPlaying = false;
-
-const playBtn = document.getElementById('play-btn');
-const trackArtist = document.getElementById('track-artist');
-
-function setStatus(msg) { trackArtist.textContent = msg; }
-
-function togglePlay() {
-  isPlaying ? stopStream() : playStream();
-}
-
-function playStream() {
-  if (!audio) {
-    audio = new Audio();
-    audio.crossOrigin = 'anonymous';
-    audio.volume = document.getElementById('vol-slider').value / 100;
-    audio.onerror = () => { setStatus('Erro ao conectar. Tente novamente.'); stopStream(); };
-    audio.onwaiting = () => setStatus('Conectando ao stream...');
-    audio.onplaying = () => setStatus('● Transmissão ao vivo · Rádio Itinga FM');
-  }
-  audio.src = STREAM_URL + '&t=' + Date.now();
-  audio.load();
-  audio.play().catch(() => setStatus('Não foi possível reproduzir. Tente novamente.'));
-  isPlaying = true;
-  playBtn.classList.add('playing');
-  setStatus('Conectando ao stream...');
-}
-
-function stopStream() {
-  if (audio) { audio.pause(); audio.src = ''; }
-  isPlaying = false;
-  playBtn.classList.remove('playing');
-  setStatus('Parado — clique para ouvir ao vivo');
-}
-
-function setVolume(v) { if (audio) audio.volume = v / 100; }
-
-function prevTrack(){}
-function nextTrack(){}
-function seekBack(){}
-function seekFwd(){}
-
-// ── PROGRAMAÇÃO DATA ──
-const programacao = {
-  seg: [
-    { time: '06:00', name: 'Bom Dia Livre', desc: 'O melhor jeito de começar o dia', host: 'Carlos Eduardo', live: true },
-    { time: '09:00', name: 'Brasil em Pauta', desc: 'Notícias e debates da manhã', host: 'Sandra Moura', live: false },
-    { time: '12:00', name: 'Hora do Almoço', desc: 'Música, leveza e informação', host: 'Bebeto Alves', live: false },
-    { time: '14:00', name: 'Tarde Musical', desc: 'MPB, pop e muito mais', host: 'DJ Bebeto', live: false },
-    { time: '17:00', name: 'Fala Povo', desc: 'A voz da comunidade no ar', host: 'Patrícia Rocha', live: false },
-    { time: '19:00', name: 'Noite Livre', desc: 'Para quem curte a noite', host: 'DJ Renata Lima', live: false },
-    { time: '22:00', name: 'Onda Noturna', desc: 'As melhores baladas até meia-noite', host: 'DJ Renata Lima', live: false },
-  ],
-  ter: [
-    { time: '06:00', name: 'Bom Dia Livre', desc: 'O melhor jeito de começar o dia', host: 'Carlos Eduardo', live: false },
-    { time: '09:00', name: 'Conexão Livre', desc: 'Entrevistas e cultura', host: 'Sandra Moura', live: true },
-    { time: '12:00', name: 'Hora do Almoço', desc: 'Música, leveza e informação', host: 'Bebeto Alves', live: false },
-    { time: '14:00', name: 'Tarde Musical', desc: 'MPB, pop e muito mais', host: 'DJ Bebeto', live: false },
-    { time: '17:00', name: 'Fala Povo', desc: 'A voz da comunidade no ar', host: 'Patrícia Rocha', live: false },
-    { time: '20:00', name: 'Samba em Cena', desc: 'O melhor do samba nacional', host: 'Bebeto Alves', live: false },
-  ],
-};
-// Repetir estrutura para outros dias
-['qua','qui','sex','sab','dom'].forEach(d => {
-  programacao[d] = programacao[d in programacao ? d : 'seg'].map(p => ({...p, live: false}));
-});
-programacao.sab = [
-  { time: '08:00', name: 'Sábado Vivo', desc: 'A manhã mais animada da semana', host: 'Bebeto Alves', live: false },
-  { time: '11:00', name: 'Samba de Mesa', desc: 'Pra curtir com a família', host: 'Patrícia Rocha', live: false },
-  { time: '14:00', name: 'DJ Set ao Vivo', desc: 'Os melhores hits do momento', host: 'DJ Renata Lima', live: true },
-  { time: '18:00', name: 'Noite de Sábado', desc: 'O melhor da noite para você', host: 'DJ Renata Lima', live: false },
-];
-programacao.dom = [
-  { time: '09:00', name: 'Domingo Relaxante', desc: 'Música suave para seu domingo', host: 'Carlos Eduardo', live: false },
-  { time: '12:00', name: 'Almoço em Família', desc: 'A trilha sonora perfeita', host: 'Bebeto Alves', live: false },
-  { time: '15:00', name: 'Flash do Passado', desc: 'Clássicos que você ama', host: 'Sandra Moura', live: false },
-  { time: '19:00', name: 'Domingo Noturno', desc: 'Para fechar o fim de semana', host: 'DJ Renata Lima', live: false },
-];
-
-let currentDay = 'seg';
-
-function renderProg(day) {
-  const grid = document.getElementById('prog-grid');
-  const items = programacao[day] || programacao['seg'];
-  grid.innerHTML = items.map(p => `
-    <div class="prog-item ${p.live ? 'ao-vivo' : ''}">
-      <div class="prog-time">
-        ${p.time}
-        ${p.live ? '<br><span class="live-tag">● AO VIVO</span>' : ''}
-      </div>
-      <div class="prog-info">
-        <div class="prog-name">${p.name}</div>
-        <div class="prog-desc">${p.desc}</div>
-      </div>
-      <div class="prog-host">${p.host}</div>
-    </div>
-  `).join('');
-}
-
-function selectDay(btn, day) {
-  document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentDay = day;
-  renderProg(day);
-}
-
-renderProg('seg');
-
-// ── CONTACT CTA ──
-function openContact() {
-  window.location.href = 'mailto:contato@ondalivre.fm?subject=Quero%20ser%20apoiador%20da%20Onda%20Livre%2098.7%20FM';
-}
-
-// ── SCROLL REVEAL ──
-const revealEls = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-revealEls.forEach(el => observer.observe(el));
-</script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
